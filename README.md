@@ -1,4 +1,18 @@
-# 💤 LazyVim
+# Custom 💤 LazyVim configuration
 
-A starter template for [LazyVim](https://github.com/LazyVim/LazyVim).
-Refer to the [documentation](https://lazyvim.github.io/installation) to get started.
+# Installation 
+Most of the following is from the official LazyVim configuration.
+
+- Backup your old nvim configuration: 
+
+```
+# required
+mv ~/.config/nvim{,.bak}
+
+# optional but recommended
+mv ~/.local/share/nvim{,.bak}
+mv ~/.local/state/nvim{,.bak}
+mv ~/.cache/nvim{,.bak}
+```
+
+- 
