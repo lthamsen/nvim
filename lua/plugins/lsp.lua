@@ -5,8 +5,8 @@ return {
   "neovim/nvim-lspconfig",
   -- Ensure dependencies are listed if not already handled by LazyVim's base setup
   dependencies = {
-    "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
+    "mason-org/mason.nvim",
+    "mason-org/mason-lspconfig.nvim",
   },
   opts = {
     -- This 'servers' table is where mason-lspconfig typically manages installations.
@@ -41,7 +41,7 @@ return {
               -- },
               fallbackFlags = {
                 "-xc++", -- Default to C++ mode if no compile_commands.json
-                "-std=c++17", -- Your preferred C++ standard
+                "-std=c++23", -- Your preferred C++ standard
                 -- Example: Add system include paths if clangd can't find them automatically
                 -- "-I/usr/include/some_library",
               },

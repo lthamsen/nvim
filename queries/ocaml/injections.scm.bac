@@ -1,0 +1,4 @@
+;; Inject OCaml highlighting into qtest comment bodies
+((comment) @injection.content
+ (#match? @injection.content "^\\(\\*\\$")
+ (#set! injection.language "ocaml"))
