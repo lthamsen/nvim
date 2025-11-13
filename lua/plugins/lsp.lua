@@ -1,71 +1,71 @@
 -- ~/.config/nvim/lua/plugins/lspconfig.lua
 -- This file defines how nvim-lspconfig is set up by LazyVim.
-
 return {
-  "neovim/nvim-lspconfig",
-  -- Ensure dependencies are listed if not already handled by LazyVim's base setup
-  dependencies = {
-    "mason-org/mason.nvim",
-    "mason-org/mason-lspconfig.nvim",
-  },
-  opts = {
-    -- This 'servers' table is where mason-lspconfig typically manages installations.
-    -- Ensure 'clangd' is *NOT* in this list, as we're managing it manually.
-    servers = {
-      -- "clangd", -- <--- IMPORTANT: Make sure this line is commented out or removed if it exists
-      -- Example:
-      -- lua_ls = {},
-      -- pyright = {},
-      -- jsonls = {},
-      -- yamlls = {},
-      -- ... other servers you want Mason to manage automatically
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "mason-org/mason.nvim",
+      "mason-org/mason-lspconfig.nvim",
     },
+    opts = function(_, opts)
+      opts.servers = opts.servers or {}
+      opts.setup = opts.setup or {}
 
-    -- This 'setup' table allows you to provide custom setup functions for LSP servers.
-    -- We will add our manual clangd configuration here.
-    setup = {
-      -- Custom setup function for clangd
-      clangd = function(_, opts)
+      --------------------------------------------------------------------------
+      -- 1) Make sure Mason does NOT manage clangd
+      --------------------------------------------------------------------------
+      -- Some LazyVim versions populate ensure_installed elsewhere; just be sure
+      -- we don't request clangd here:
+      opts.servers.clangd = nil
+
+      --------------------------------------------------------------------------
+      -- 2) Manual clangd setup (uses system clangd from PATH)
+      --------------------------------------------------------------------------
+      opts.setup.clangd = function(_, _)
         local lspconfig = require("lspconfig")
-
         lspconfig.clangd.setup({
-          cmd = { "clangd" }, -- Use the system-wide clangd found in PATH
-          settings = {
-            clangd = {
-              -- Add any specific clangd arguments here.
-              -- For example, to enable semantic highlighting (requires Neovim 0.9+ and clangd 15+)
-              -- arguments = {
-              --     "--clang-tidy",
-              --     "--background-index",
-              --     "--semantic-highlighting",
-              -- },
-              fallbackFlags = {
-                "-xc++", -- Default to C++ mode if no compile_commands.json
-                "-std=c++23", -- Your preferred C++ standard
-                -- Example: Add system include paths if clangd can't find them automatically
-                -- "-I/usr/include/some_library",
-              },
+          cmd = { "clangd" }, -- system clangd
+          -- If you want extra features, uncomment and tweak:
+          -- cmd = { "clangd", "--background-index", "--clang-tidy", "--semantic-highlighting" },
+          filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "h", "hpp" },
+          root_dir = lspconfig.util.root_pattern("compile_commands.json", ".clangd", ".git"),
+          -- NOTE: fallbackFlags are clangd initialization options (not settings)
+          init_options = {
+            fallbackFlags = {
+              "-xc++",
+              "-std=c++23",
             },
           },
-          filetypes = {
-            "c",
-            "cpp",
-            "objc",
-            "objcpp",
-            "cuda",
-            "h",
-            "hpp",
-          },
-          -- You might want to define a root_dir function if your C/C++ projects
-          -- don't always have a .git/compile_commands.json/.clangd at the root.
-          root_dir = lspconfig.util.root_pattern(".git", "compile_commands.json", ".clangd"),
+          -- Preserve LazyVim’s on_attach/capabilities if they exist:
+          on_attach = opts.on_attach,
+          capabilities = opts.capabilities,
         })
-      end,
+        return true -- tell LazyVim we've handled clangd ourselves
+      end
 
-      -- You can add custom setup functions for other servers here as well:
-      -- lua_ls = function(_, opts)
-      --   require("lspconfig").lua_ls.setup(opts)
-      -- end,
-    },
+      --------------------------------------------------------------------------
+      -- 3) rust-analyzer settings (your Leptos proc-macro ignore)
+      --------------------------------------------------------------------------
+      -- opts.servers.rust_analyzer = vim.tbl_deep_extend("force", opts.servers.rust_analyzer or {}, {
+      --   settings = {
+      --     ["rust-analyzer"] = {
+      --       cargo = {
+      --         allTargets = false, -- don’t build test benches for no_std
+      --         allFeatures = true, -- enable features for your crate
+      --       },
+      --       checkOnSave = {
+      --         command = "check", -- faster than clippy for embedded targets
+      --         extraArgs = { "--target", "xtensa-esp32-none-elf" },
+      --       },
+      --       procMacro = {
+      --         ignored = {
+      --           leptos_macro = { "server" },
+      --         },
+      --       },
+      --     },
+      --   },
+      -- })
+      return opts
+    end,
   },
 }
