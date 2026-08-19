@@ -1,4 +1,0 @@
-;; highlight qtest-style extension comments
-((comment) @qtest
- (#match? @qtest "^\\(\\*\\$"))
-
