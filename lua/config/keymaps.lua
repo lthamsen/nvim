@@ -34,10 +34,28 @@ map("n", "<leader>w>", "<C-w>>", { desc = "Increase width" })
 map("n", "<leader>w<", "<C-w><", { desc = "Decrease width" })
 map("n", "<leader>w_", "<C-w>_", { desc = "Max height" })
 
+
+-- Move
+-- Normal mode: move current line
+map("n", "<A-j>", ":m .+1<CR>==", { silent = true })
+map("n", "<A-k>", ":m .-2<CR>==", { silent = true })
+
+-- Insert mode: move line without leaving insert
+map("i", "<A-j>", "<Esc>:m .+1<CR>==gi", { silent = true })
+map("i", "<A-k>", "<Esc>:m .-2<CR>==gi", { silent = true })
+
+-- Visual mode: move selected block
+map("v", "<A-j>", ":m '>+1<CR>gv=gv", { silent = true })
+map("v", "<A-k>", ":m '<-2<CR>gv=gv", { silent = true })
+
+
+-- Search clear
+map("n", "<Esc>", "<cmd>nohlsearch<CR>")
+
 -- Buffers
 -- navigate
 map("n", "<leader>bb", function()
-	Snacks.picker.buffers()
+  Snacks.picker.buffers()
 end, { desc = "Find buffer" })
 map("n", "<leader>bn", "<cmd>bnext<cr>", { desc = "Next buffer" })
 map("n", "<leader>bp", "<cmd>bprevious<cr>", { desc = "Previous buffer" })
@@ -45,13 +63,13 @@ map("n", "<leader>b<Tab>", "<cmd>b#<cr>", { desc = "Last used buffer" })
 
 -- close
 map("n", "<leader>bd", function()
-	Snacks.bufdelete()
+  Snacks.bufdelete()
 end, { desc = "Delete buffer" })
 map("n", "<leader>bo", function()
-	Snacks.bufdelete.other()
+  Snacks.bufdelete.other()
 end, { desc = "Delete other buffers" })
 map("n", "<leader>ba", function()
-	Snacks.bufdelete.all()
+  Snacks.bufdelete.all()
 end, { desc = "Delete all buffers" })
 
 -- misc
@@ -61,7 +79,7 @@ local map = vim.keymap.set
 
 -- navigate
 map("n", "<leader>bb", function()
-	Snacks.picker.buffers()
+  Snacks.picker.buffers()
 end, { desc = "Find buffer" })
 map("n", "<leader>bn", "<cmd>bnext<cr>", { desc = "Next buffer" })
 map("n", "<leader>bp", "<cmd>bprevious<cr>", { desc = "Previous buffer" })
@@ -69,15 +87,16 @@ map("n", "<leader>b<Tab>", "<cmd>b#<cr>", { desc = "Last used buffer" })
 
 -- close
 map("n", "<leader>bd", function()
-	Snacks.bufdelete()
+  Snacks.bufdelete()
 end, { desc = "Delete buffer" })
 map("n", "<leader>bo", function()
-	Snacks.bufdelete.other()
+  Snacks.bufdelete.other()
 end, { desc = "Delete other buffers" })
 map("n", "<leader>ba", function()
-	Snacks.bufdelete.all()
+  Snacks.bufdelete.all()
 end, { desc = "Delete all buffers" })
 
 -- misc
 map("n", "<leader>bl", "<cmd>ls<cr>", { desc = "List buffers" })
 map("n", "<leader>bs", "<cmd>w<cr>", { desc = "Save buffer" })
+map("n", "E", vim.diagnostic.open_float)

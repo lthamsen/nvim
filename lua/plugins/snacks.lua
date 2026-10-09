@@ -6,6 +6,9 @@ return {
 	opts = {
 		notifier = {},
 		input = {},
+		-- Images/mermaid are viewed in the browser preview (<leader>mp), not in the buffer
+		image = { doc = { inline = false, float = false } },
+		statuscolumn = { folds = { open = false } },
 		picker = {
 			layout = { auto_hide = { "input" } },
 			focus = "list",
